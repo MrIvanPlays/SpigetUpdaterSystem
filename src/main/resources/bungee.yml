@@ -1,0 +1,4 @@
+name: SpigetUpdaterSystem
+main: com.github.mrivanplays.updater.bungee.UpdaterSystem
+version: 1.0.0
+author: MrIvanPlays

@@ -1,0 +1,5 @@
+name: SpigetUpdaterSystem
+version: ${project.version}
+main: com.github.mrivanplays.updater.bukkit.UpdaterSystem
+api-version: 1.13
+author: MrIvanPlays
