@@ -38,7 +38,7 @@ public class UpdateDownloader extends Updater implements Listener
     {
         if ( updateAvailable() )
         {
-            return getLastUpdate()[ 0 ];
+            return getLastUpdate()[0];
         } else
         {
             return plugin.getDescription().getVersion();
@@ -79,7 +79,7 @@ public class UpdateDownloader extends Updater implements Listener
                     {
                         player.spigot().sendMessage( message() );
                     }
-                });
+                } );
             }
         }, 144000, 144000 );
     }

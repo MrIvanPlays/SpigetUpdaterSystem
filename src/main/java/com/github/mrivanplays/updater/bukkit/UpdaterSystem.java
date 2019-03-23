@@ -14,7 +14,8 @@ public class UpdaterSystem extends JavaPlugin
         UpdateDownloader updater = new UpdateDownloader( this, 12345, "my.permission" );
         updater.fetch();
         // Example command
-        getCommand( "downloadnudes" ).setExecutor( (sender, command, label, args) -> {
+        getCommand( "downloadnudes" ).setExecutor( (sender, command, label, args) ->
+        {
             if ( sender.hasPermission( "something" ) )
             {
                 updater.downloadUpdate( sender );

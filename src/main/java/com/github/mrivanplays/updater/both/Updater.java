@@ -1,4 +1,5 @@
 package com.github.mrivanplays.updater.both;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public abstract class Updater
 
             InputStream in = conn.getInputStream();
             FileOutputStream out = new FileOutputStream( output );
-            byte[] b = new byte[ 1024 ];
+            byte[] b = new byte[1024];
             int n = in.read( b );
             while ( n != -1 )
             {
@@ -78,7 +79,7 @@ public abstract class Updater
      * [1] - update title
      *
      * @return string array with the current version and update title
-     *         on spigot, fewtched via spiget
+     * on spigot, fewtched via spiget
      */
     public String[] getLastUpdate()
     {
@@ -86,19 +87,19 @@ public abstract class Updater
         try
         {
             JSONArray versionsArray = (JSONArray) JSONValue.parseWithException( IOUtils.toString( new URL( VERSION_URL ), Charset.defaultCharset() ) );
-            String lastVersion = ((JSONObject) versionsArray.get( versionsArray.size() - 1 )).get( "name" ).toString();
+            String lastVersion = ( (JSONObject) versionsArray.get( versionsArray.size() - 1 ) ).get( "name" ).toString();
             if ( !lastVersion.equalsIgnoreCase( currentVersion ) )
             {
                 JSONArray updatesArray = (JSONArray) JSONValue.parseWithException( IOUtils.toString( new URL( DESCRIPTION_URL ), Charset.defaultCharset() ) );
-                String updateName = ((JSONObject) updatesArray.get( updatesArray.size() - 1 )).get( "title" ).toString();
+                String updateName = ( (JSONObject) updatesArray.get( updatesArray.size() - 1 ) ).get( "title" ).toString();
 
-                return new String[]{ lastVersion, updateName };
+                return new String[] { lastVersion, updateName };
             }
         } catch ( IOException | ParseException e )
         {
-            return new String[ 0 ];
+            return new String[0];
         }
-        return new String[ 0 ];
+        return new String[0];
     }
 
     /**
@@ -112,8 +113,8 @@ public abstract class Updater
         ComponentBuilder builder = new ComponentBuilder( "[" )
                 .color( ChatColor.GOLD ).append( pluginName ).color( ChatColor.YELLOW ).append( "]" ).color( ChatColor.GOLD ).append( " " )
                 .append( "New update available" ).color( ChatColor.GREEN ).append( "\n" ).append( "You are currently running version " + currentVersion )
-                .color( ChatColor.RED ).append( "\n" ).append( "New version: " + getLastUpdate()[ 0 ] ).color( ChatColor.GREEN ).append( "\n" )
-                .append( "What's new: \"" + getLastUpdate()[ 1 ] + "\"" ).color( ChatColor.AQUA ).append( "\n" ).append( "You can download via clicking " ).color( ChatColor.BLUE )
+                .color( ChatColor.RED ).append( "\n" ).append( "New version: " + getLastUpdate()[0] ).color( ChatColor.GREEN ).append( "\n" )
+                .append( "What's new: \"" + getLastUpdate()[1] + "\"" ).color( ChatColor.AQUA ).append( "\n" ).append( "You can download via clicking " ).color( ChatColor.BLUE )
                 .append( "\n" );
         TextComponent linkComponent = new TextComponent( "here" );
         linkComponent.setBold( true );
@@ -156,8 +157,8 @@ public abstract class Updater
      */
     public void updateMessageConsole(Logger logger)
     {
-        logger.warning( "Stable version " + getLastUpdate()[ 0 ] + " is out! You are still running version " + currentVersion );
-        logger.info( "What's new: \"" + getLastUpdate()[ 1 ] + "\"");
+        logger.warning( "Stable version " + getLastUpdate()[0] + " is out! You are still running version " + currentVersion );
+        logger.info( "What's new: \"" + getLastUpdate()[1] + "\"" );
         logger.info( "Download from here: " + getResourceURL() );
     }
 

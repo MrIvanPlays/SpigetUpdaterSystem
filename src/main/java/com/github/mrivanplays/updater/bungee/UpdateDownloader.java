@@ -15,6 +15,9 @@ import net.md_5.bungee.event.EventHandler;
 
 import com.github.mrivanplays.updater.both.Updater;
 
+/**
+ * Represents a bungeecord updater
+ */
 public class UpdateDownloader extends Updater implements Listener
 {
 
@@ -28,17 +31,25 @@ public class UpdateDownloader extends Updater implements Listener
         this.permission = permission;
     }
 
+    /**
+     * Gets the new version of the plugin
+     *
+     * @return new version if update available
+     */
     public String getNewVersion()
     {
         if ( updateAvailable() )
         {
-            return getLastUpdate()[ 0 ];
+            return getLastUpdate()[0];
         } else
         {
             return plugin.getDescription().getVersion();
         }
     }
 
+    /**
+     * Fetchs (starts) the updater
+     */
     public void fetch()
     {
         plugin.getProxy().getScheduler().runAsync( plugin, () ->
@@ -52,6 +63,11 @@ public class UpdateDownloader extends Updater implements Listener
         checkUpdates();
     }
 
+    /**
+     * Checks for update every 2 hours
+     * If update is available the players with the specified permission
+     * are notified and in the console is send message that update is available
+     */
     private void checkUpdates()
     {
         plugin.getProxy().getScheduler().schedule( plugin, () ->
@@ -70,6 +86,11 @@ public class UpdateDownloader extends Updater implements Listener
         }, 2, 2, TimeUnit.HOURS );
     }
 
+    /**
+     * Downloads update if available
+     *
+     * @param sender command sender
+     */
     public void downloadUpdate(CommandSender sender)
     {
         sender.sendMessage( new TextComponent( "Checking for updates" ) );
@@ -77,7 +98,7 @@ public class UpdateDownloader extends Updater implements Listener
         {
             String pluginName = plugin.getDescription().getName();
             sender.sendMessage( new ComponentBuilder( "Update found, downloading" ).color( ChatColor.YELLOW ).create() );
-            File zip = new File( plugin.getDataFolder() + File.separator + "Update" + File.separator, pluginName + "-" + getNewVersion() + ".zip" );
+            File zip = new File( plugin.getDataFolder() + File.separator + "Update" + File.separator, pluginName + "-" + getNewVersion() + ".jar" );
             createFile( zip );
             plugin.getProxy().getScheduler().runAsync( plugin, () -> download( zip ) );
             sender.sendMessage( new ComponentBuilder( "Successfully deployed new version of " + pluginName + " inside plugins/" + pluginName + "/Update" ).color( ChatColor.GREEN ).create() );
@@ -88,6 +109,11 @@ public class UpdateDownloader extends Updater implements Listener
         }
     }
 
+    /**
+     * Event, registered when an update is available
+     *
+     * @param event server connect event
+     */
     @EventHandler
     public void on(ServerConnectEvent event)
     {
