@@ -48,7 +48,7 @@ public abstract class Updater
      *
      * @param output the outputted file
      */
-    public void download(File output)
+    protected void download(File output)
     {
         try
         {
@@ -79,9 +79,9 @@ public abstract class Updater
      * [1] - update title
      *
      * @return string array with the current version and update title
-     * on spigot, fewtched via spiget
+     * on spigot, fetched via spiget
      */
-    public String[] getLastUpdate()
+    protected String[] getLastUpdate()
     {
 
         try
@@ -108,7 +108,7 @@ public abstract class Updater
      *
      * @return a base component array, with all extras and stuff going around
      */
-    public BaseComponent[] message()
+    protected BaseComponent[] message()
     {
         ComponentBuilder builder = new ComponentBuilder( "[" )
                 .color( ChatColor.GOLD ).append( pluginName ).color( ChatColor.YELLOW ).append( "]" ).color( ChatColor.GOLD ).append( " " )
@@ -125,7 +125,7 @@ public abstract class Updater
         return builder.create();
     }
 
-    public String color(String text)
+    protected String color(String text)
     {
         return ChatColor.translateAlternateColorCodes( '&', text );
     }
@@ -145,7 +145,7 @@ public abstract class Updater
      *
      * @return true, if update available
      */
-    public boolean updateAvailable()
+    protected boolean updateAvailable()
     {
         return getLastUpdate().length == 2;
     }
@@ -155,7 +155,7 @@ public abstract class Updater
      *
      * @param logger desired logger
      */
-    public void updateMessageConsole(Logger logger)
+    protected void updateMessageConsole(Logger logger)
     {
         logger.warning( "Stable version " + getLastUpdate()[0] + " is out! You are still running version " + currentVersion );
         logger.info( "What's new: \"" + getLastUpdate()[1] + "\"" );
@@ -167,7 +167,7 @@ public abstract class Updater
      *
      * @param jar created file
      */
-    public void createFile(File jar)
+    protected void createFile(File jar)
     {
         if ( !jar.exists() )
         {
