@@ -16,15 +16,13 @@ import com.github.mrivanplays.updater.both.Updater;
 /**
  * Represents a spigot updater
  */
-public class UpdateDownloader extends Updater implements Listener
-{
+public class UpdateDownloader extends Updater implements Listener {
 
     private JavaPlugin plugin;
     private String permission;
 
-    public UpdateDownloader(JavaPlugin plugin, int resourceID, String permission)
-    {
-        super( resourceID, plugin.getDescription().getVersion(), plugin.getName() );
+    public UpdateDownloader(JavaPlugin plugin, int resourceID, String permission) {
+        super(resourceID, plugin.getDescription().getVersion(), plugin.getName());
         this.plugin = plugin;
         this.permission = permission;
     }
@@ -34,13 +32,10 @@ public class UpdateDownloader extends Updater implements Listener
      *
      * @return new version if update available
      */
-    public String getNewVersion()
-    {
-        if ( updateAvailable() )
-        {
+    public String getNewVersion() {
+        if (updateAvailable()) {
             return getLastUpdate()[0];
-        } else
-        {
+        } else {
             return plugin.getDescription().getVersion();
         }
     }
@@ -48,16 +43,14 @@ public class UpdateDownloader extends Updater implements Listener
     /**
      * Fetchs (starts) the updater
      */
-    public void fetch()
-    {
-        plugin.getServer().getScheduler().runTaskAsynchronously( plugin, () ->
+    public void fetch() {
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () ->
         {
-            if ( updateAvailable() )
-            {
-                updateMessageConsole( plugin.getLogger() );
-                plugin.getServer().getPluginManager().registerEvents( UpdateDownloader.this, plugin );
+            if (updateAvailable()) {
+                updateMessageConsole(plugin.getLogger());
+                plugin.getServer().getPluginManager().registerEvents(UpdateDownloader.this, plugin);
             }
-        } );
+        });
         checkUpdates();
     }
 
@@ -66,22 +59,19 @@ public class UpdateDownloader extends Updater implements Listener
      * If update is available the players with the specified permission
      * are notified and in the console is send message that update is available
      */
-    private void checkUpdates()
-    {
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask( plugin, () ->
+    private void checkUpdates() {
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () ->
         {
-            if ( updateAvailable() )
-            {
-                updateMessageConsole( plugin.getLogger() );
-                plugin.getServer().getOnlinePlayers().forEach( player ->
+            if (updateAvailable()) {
+                updateMessageConsole(plugin.getLogger());
+                plugin.getServer().getOnlinePlayers().forEach(player ->
                 {
-                    if ( player.hasPermission( permission ) )
-                    {
-                        player.spigot().sendMessage( message() );
+                    if (player.hasPermission(permission)) {
+                        player.spigot().sendMessage(message());
                     }
-                } );
+                });
             }
-        }, 144000, 144000 );
+        }, 144000, 144000);
     }
 
     /**
@@ -89,20 +79,17 @@ public class UpdateDownloader extends Updater implements Listener
      *
      * @param sender command sender
      */
-    public void downloadUpdate(CommandSender sender)
-    {
-        sender.sendMessage( "Checking for updates..." );
-        if ( updateAvailable() )
-        {
-            sender.spigot().sendMessage( new ComponentBuilder( "Update found, downloading..." ).color( ChatColor.YELLOW ).create() );
-            File jar = new File( plugin.getDataFolder() + File.separator + "Update" + File.separator, plugin.getName() + "-" + getNewVersion() + ".jar" );
-            createFile( jar );
-            plugin.getServer().getScheduler().runTaskAsynchronously( plugin, () -> download( jar ) );
-            sender.sendMessage( color( "&aSuccessfully deployed new version of " + plugin.getName() + " inside plugins/" + plugin.getName() + "/Update" ) );
-            sender.sendMessage( color( "&aExtract, move inside plugins, stop server, delete old and start the server!" ) );
-        } else
-        {
-            sender.spigot().sendMessage( new ComponentBuilder( "No updates found for download!" ).color( ChatColor.RED ).create() );
+    public void downloadUpdate(CommandSender sender) {
+        sender.sendMessage("Checking for updates...");
+        if (updateAvailable()) {
+            sender.spigot().sendMessage(new ComponentBuilder("Update found, downloading...").color(ChatColor.YELLOW).create());
+            File jar = new File(plugin.getDataFolder() + File.separator + "Update" + File.separator, plugin.getName() + "-" + getNewVersion() + ".jar");
+            createFile(jar);
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> download(jar));
+            sender.sendMessage(color("&aSuccessfully deployed new version of " + plugin.getName() + " inside plugins/" + plugin.getName() + "/Update"));
+            sender.sendMessage(color("&aExtract, move inside plugins, stop server, delete old and start the server!"));
+        } else {
+            sender.spigot().sendMessage(new ComponentBuilder("No updates found for download!").color(ChatColor.RED).create());
         }
     }
 
@@ -112,12 +99,10 @@ public class UpdateDownloader extends Updater implements Listener
      * @param event player join event
      */
     @EventHandler
-    public void on(PlayerJoinEvent event)
-    {
+    public void on(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if ( player.hasPermission( permission ) )
-        {
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask( plugin, () -> player.spigot().sendMessage( message() ), 100 );
+        if (player.hasPermission(permission)) {
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> player.spigot().sendMessage(message()), 100);
         }
     }
 }

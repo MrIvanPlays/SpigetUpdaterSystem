@@ -7,23 +7,19 @@ import net.md_5.bungee.api.plugin.Plugin;
 /**
  * Dummy plugin, showing how to fetch updater
  */
-public class UpdaterSystem extends Plugin
-{
+public class UpdaterSystem extends Plugin {
 
     @Override
-    public void onEnable()
-    {
-        UpdateDownloader updater = new UpdateDownloader( this, 12345, "my.permission" );
+    public void onEnable() {
+        UpdateDownloader updater = new UpdateDownloader(this, 12345, "my.permission");
         updater.fetch();
         // Example command
-        getProxy().getPluginManager().registerCommand( this, new Command( "downloadnudes", "something" )
-        {
+        getProxy().getPluginManager().registerCommand(this, new Command("downloadnudes", "something") {
 
             @Override
-            public void execute(CommandSender sender, String[] args)
-            {
-                updater.downloadUpdate( sender );
+            public void execute(CommandSender sender, String[] args) {
+                updater.downloadUpdate(sender);
             }
-        } );
+        });
     }
 }

@@ -25,8 +25,7 @@ import org.json.simple.parser.ParseException;
  * Represents parent class for the updaters,
  * giving a bunch of abilities to the updater classes
  */
-public abstract class Updater
-{
+public abstract class Updater {
 
     private final String VERSION_URL;
     private final String DESCRIPTION_URL;
@@ -34,8 +33,7 @@ public abstract class Updater
     private String currentVersion;
     private String pluginName;
 
-    public Updater(int resourceID, String currentVersion, String pluginName)
-    {
+    public Updater(int resourceID, String currentVersion, String pluginName) {
         this.resourceID = resourceID;
         this.VERSION_URL = "https://api.spiget.org/v2/resources/" + resourceID + "/versions?size=" + Integer.MAX_VALUE;
         this.DESCRIPTION_URL = "https://api.spiget.org/v2/resources/" + resourceID + "/updates?size=" + Integer.MAX_VALUE;
@@ -48,27 +46,23 @@ public abstract class Updater
      *
      * @param output the outputted file
      */
-    protected void download(File output)
-    {
-        try
-        {
-            URL url = new URL( "https://api.spiget.org/v2/resources/" + resourceID + "/download" );
+    protected void download(File output) {
+        try {
+            URL url = new URL("https://api.spiget.org/v2/resources/" + resourceID + "/download");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod( "GET" );
+            conn.setRequestMethod("GET");
 
             InputStream in = conn.getInputStream();
-            FileOutputStream out = new FileOutputStream( output );
+            FileOutputStream out = new FileOutputStream(output);
             byte[] b = new byte[1024];
-            int n = in.read( b );
-            while ( n != -1 )
-            {
-                out.write( b, 0, n );
-                n = in.read( b );
+            int n = in.read(b);
+            while (n != -1) {
+                out.write(b, 0, n);
+                n = in.read(b);
             }
             out.close();
             in.close();
-        } catch ( IOException e )
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -81,22 +75,18 @@ public abstract class Updater
      * @return string array with the current version and update title
      * on spigot, fetched via spiget
      */
-    protected String[] getLastUpdate()
-    {
+    protected String[] getLastUpdate() {
 
-        try
-        {
-            JSONArray versionsArray = (JSONArray) JSONValue.parseWithException( IOUtils.toString( new URL( VERSION_URL ), Charset.defaultCharset() ) );
-            String lastVersion = ( (JSONObject) versionsArray.get( versionsArray.size() - 1 ) ).get( "name" ).toString();
-            if ( !lastVersion.equalsIgnoreCase( currentVersion ) )
-            {
-                JSONArray updatesArray = (JSONArray) JSONValue.parseWithException( IOUtils.toString( new URL( DESCRIPTION_URL ), Charset.defaultCharset() ) );
-                String updateName = ( (JSONObject) updatesArray.get( updatesArray.size() - 1 ) ).get( "title" ).toString();
+        try {
+            JSONArray versionsArray = (JSONArray) JSONValue.parseWithException(IOUtils.toString(new URL(VERSION_URL), Charset.defaultCharset()));
+            String lastVersion = ((JSONObject) versionsArray.get(versionsArray.size() - 1)).get("name").toString();
+            if (!lastVersion.equalsIgnoreCase(currentVersion)) {
+                JSONArray updatesArray = (JSONArray) JSONValue.parseWithException(IOUtils.toString(new URL(DESCRIPTION_URL), Charset.defaultCharset()));
+                String updateName = ((JSONObject) updatesArray.get(updatesArray.size() - 1)).get("title").toString();
 
-                return new String[] { lastVersion, updateName };
+                return new String[]{lastVersion, updateName};
             }
-        } catch ( IOException | ParseException e )
-        {
+        } catch (IOException | ParseException e) {
             return new String[0];
         }
         return new String[0];
@@ -108,26 +98,24 @@ public abstract class Updater
      *
      * @return a base component array, with all extras and stuff going around
      */
-    protected BaseComponent[] message()
-    {
-        ComponentBuilder builder = new ComponentBuilder( "[" )
-                .color( ChatColor.GOLD ).append( pluginName ).color( ChatColor.YELLOW ).append( "]" ).color( ChatColor.GOLD ).append( " " )
-                .append( "New update available" ).color( ChatColor.GREEN ).append( "\n" ).append( "You are currently running version " + currentVersion )
-                .color( ChatColor.RED ).append( "\n" ).append( "New version: " + getLastUpdate()[0] ).color( ChatColor.GREEN ).append( "\n" )
-                .append( "What's new: \"" + getLastUpdate()[1] + "\"" ).color( ChatColor.AQUA ).append( "\n" ).append( "You can download via clicking " ).color( ChatColor.BLUE )
-                .append( "\n" );
-        TextComponent linkComponent = new TextComponent( "here" );
-        linkComponent.setBold( true );
-        linkComponent.setColor( ChatColor.AQUA );
-        linkComponent.setClickEvent( new ClickEvent( ClickEvent.Action.OPEN_URL, getResourceURL() ) );
-        linkComponent.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click me to get redirect to download page" ).color( ChatColor.DARK_GREEN ).create() ) );
-        builder.append( linkComponent );
+    protected BaseComponent[] message() {
+        ComponentBuilder builder = new ComponentBuilder("[")
+                .color(ChatColor.GOLD).append(pluginName).color(ChatColor.YELLOW).append("]").color(ChatColor.GOLD).append(" ")
+                .append("New update available").color(ChatColor.GREEN).append("\n").append("You are currently running version " + currentVersion)
+                .color(ChatColor.RED).append("\n").append("New version: " + getLastUpdate()[0]).color(ChatColor.GREEN).append("\n")
+                .append("What's new: \"" + getLastUpdate()[1] + "\"").color(ChatColor.AQUA).append("\n").append("You can download via clicking ").color(ChatColor.BLUE)
+                .append("\n");
+        TextComponent linkComponent = new TextComponent("here");
+        linkComponent.setBold(true);
+        linkComponent.setColor(ChatColor.AQUA);
+        linkComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, getResourceURL()));
+        linkComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click me to get redirect to download page").color(ChatColor.DARK_GREEN).create()));
+        builder.append(linkComponent);
         return builder.create();
     }
 
-    protected String color(String text)
-    {
-        return ChatColor.translateAlternateColorCodes( '&', text );
+    protected String color(String text) {
+        return ChatColor.translateAlternateColorCodes('&', text);
     }
 
     /**
@@ -135,8 +123,7 @@ public abstract class Updater
      *
      * @return resource url
      */
-    private String getResourceURL()
-    {
+    private String getResourceURL() {
         return "https://spigotmc.org/resources/" + resourceID;
     }
 
@@ -145,8 +132,7 @@ public abstract class Updater
      *
      * @return true, if update available
      */
-    protected boolean updateAvailable()
-    {
+    protected boolean updateAvailable() {
         return getLastUpdate().length == 2;
     }
 
@@ -155,11 +141,10 @@ public abstract class Updater
      *
      * @param logger desired logger
      */
-    protected void updateMessageConsole(Logger logger)
-    {
-        logger.warning( "Stable version " + getLastUpdate()[0] + " is out! You are still running version " + currentVersion );
-        logger.info( "What's new: \"" + getLastUpdate()[1] + "\"" );
-        logger.info( "Download from here: " + getResourceURL() );
+    protected void updateMessageConsole(Logger logger) {
+        logger.warning("Stable version " + getLastUpdate()[0] + " is out! You are still running version " + currentVersion);
+        logger.info("What's new: \"" + getLastUpdate()[1] + "\"");
+        logger.info("Download from here: " + getResourceURL());
     }
 
     /**
@@ -167,19 +152,14 @@ public abstract class Updater
      *
      * @param jar created file
      */
-    protected void createFile(File jar)
-    {
-        if ( !jar.exists() )
-        {
-            if ( !jar.getParentFile().exists() )
-            {
+    protected void createFile(File jar) {
+        if (!jar.exists()) {
+            if (!jar.getParentFile().exists()) {
                 jar.getParentFile().mkdirs();
             }
-            try
-            {
+            try {
                 jar.createNewFile();
-            } catch ( IOException e )
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
