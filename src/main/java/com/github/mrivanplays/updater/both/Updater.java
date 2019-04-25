@@ -9,6 +9,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -16,10 +18,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
 
 /**
  * Represents parent class for the updaters,
@@ -76,17 +74,18 @@ public abstract class Updater {
      * on spigot, fetched via spiget
      */
     protected String[] getLastUpdate() {
-
         try {
-            JSONArray versionsArray = (JSONArray) JSONValue.parseWithException(IOUtils.toString(new URL(VERSION_URL), Charset.defaultCharset()));
-            String lastVersion = ((JSONObject) versionsArray.get(versionsArray.size() - 1)).get("name").toString();
-            if (!lastVersion.equalsIgnoreCase(currentVersion)) {
-                JSONArray updatesArray = (JSONArray) JSONValue.parseWithException(IOUtils.toString(new URL(DESCRIPTION_URL), Charset.defaultCharset()));
-                String updateName = ((JSONObject) updatesArray.get(updatesArray.size() - 1)).get("title").toString();
+            JsonParser parser = new JsonParser();
+            JsonArray versionsArray = parser.parse( IOUtils.toString( new URL( VERSION_URL ), Charset.defaultCharset() ) ).getAsJsonArray();
+            String lastVersion = versionsArray.get( versionsArray.size() - 1 ).getAsJsonObject().get( "name" ).getAsString();
+            if ( !lastVersion.equalsIgnoreCase( currentVersion ) )
+            {
+                JsonArray updatesArray = parser.parse( IOUtils.toString( new URL( DESCRIPTION_URL ), Charset.defaultCharset() ) ).getAsJsonArray();
+                String updateName = updatesArray.get( updatesArray.size() - 1 ).getAsJsonObject().get( "title" ).getAsString();
 
-                return new String[]{lastVersion, updateName};
+                return new String[] { lastVersion, updateName };
             }
-        } catch (IOException | ParseException e) {
+        } catch (IOException e) {
             return new String[0];
         }
         return new String[0];
